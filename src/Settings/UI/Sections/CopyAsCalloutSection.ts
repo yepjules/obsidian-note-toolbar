@@ -1,7 +1,7 @@
 import { Setting, SettingGroup, ToggleComponent } from 'obsidian';
 import { t } from 'Settings/NoteToolbarSettings';
 import { fixToggleTab, learnMoreFr } from '../Utils/SettingsUIUtils';
-import { SettingsTabState } from './types';
+import type { SettingsTabState } from './types';
 
 export function displayCopyAsCalloutSettings(state: SettingsTabState, containerEl: HTMLElement): void {
 
@@ -41,7 +41,7 @@ export function displayCopyAsCalloutSettings(state: SettingsTabState, containerE
 	calloutGroup.addSetting((replaceVarsSetting) => {
 		replaceVarsSetting
 			.setName(t('setting.copy-as-callout.option-vars'))
-			.setDesc(t('setting.copy-as-callout.option-vars-description', {interpolation: { skipOnVariables: true }} ))
+			.setDesc(t('setting.copy-as-callout.option-vars-description', { interpolation: { skipOnVariables: true } }))
 			.addToggle((toggle: ToggleComponent) => {
 				toggle
 					.setValue(ntb.settings.export.replaceVars)
@@ -85,5 +85,4 @@ export function displayCopyAsCalloutSettings(state: SettingsTabState, containerE
 
 	collapsibleEl.appendChild(collapsibleContainerEl);
 	containerEl.appendChild(collapsibleEl);
-
 }

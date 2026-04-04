@@ -5,7 +5,7 @@ import { getElementPosition } from 'Utils/Utils';
 import { importFromModal } from '../Modals/ImportModal';
 import ShareModal from '../Modals/ShareModal';
 import { iconTextFr, learnMoreFr } from '../Utils/SettingsUIUtils';
-import { SettingsTabState } from './types';
+import type { SettingsTabState } from './types';
 
 export function displayToolbarList(state: SettingsTabState, containerEl: HTMLElement): void {
 
@@ -23,10 +23,8 @@ export function displayToolbarList(state: SettingsTabState, containerEl: HTMLEle
 		.setName(toolbarListHeading)
 		.setHeading();
 
-	// search button (or field on desktop)
 	if (ntb.settings.toolbars.length > 4) {
 		if (!Platform.isPhone) {
-			// search field
 			renderSearchField(state, toolbarListSetting.controlEl);
 		}
 		else {
@@ -36,19 +34,16 @@ export function displayToolbarList(state: SettingsTabState, containerEl: HTMLEle
 					.setTooltip(t('setting.search.button-tooltip'))
 					.onClick(async () => {
 						toggleSearch(state);
-						// un-collapse list container if it's collapsed
 						if (!state.isSectionOpen['itemList']) {
 							toggleToolbarList(state);
 						}
 					});
 					ntb.settingsUtils.handleKeyClick(cb.extraSettingsEl);
-					// used to set focus on settings display
 					cb.extraSettingsEl.id = 'ntb-tbar-search-button';
 				});
 		}
 	}
 
-	// import button
 	toolbarListSetting
 		.addExtraButton((cb) => {
 			cb.setIcon('import')
@@ -68,12 +63,10 @@ export function displayToolbarList(state: SettingsTabState, containerEl: HTMLEle
 			ntb.settingsUtils.handleKeyClick(cb.extraSettingsEl);
 		});
 
-	// search field (phone)
 	if (ntb.settings.toolbars.length > 4) {
 		if (Platform.isPhone) renderSearchField(state, itemsContainer);
 	}
 
-	// make collapsible
 	if (ntb.settings.toolbars.length > 4) {
 		state.renderSettingToggle(toolbarListSetting, '.note-toolbar-setting-items-container', 'itemList', () => {
 			toolbarListSetting.setName(
@@ -101,7 +94,6 @@ export function displayToolbarList(state: SettingsTabState, containerEl: HTMLEle
 
 				const toolbarNameFr = document.createDocumentFragment();
 				toolbarNameFr.append(toolbar.name ? toolbar.name : t('setting.toolbars.label-tbar-name-not-set'));
-				// show hotkey
 				if (!Platform.isPhone) {
 					const tbarCommand = ntb.commands.getCommandFor(toolbar);
 					if (tbarCommand) {
@@ -184,7 +176,6 @@ export function displayToolbarList(state: SettingsTabState, containerEl: HTMLEle
 								});
 								menu.showAtPosition(getElementPosition(button.buttonEl));
 							});
-						// used to distinguish buttons for keyboard navigation
 						button.buttonEl.addClass('ntb-tbar-more');
 					})
 					.addButton((button: ButtonComponent) => {
@@ -194,11 +185,9 @@ export function displayToolbarList(state: SettingsTabState, containerEl: HTMLEle
 							.onClick(() => {
 								ntb.settingsManager.openToolbarSettings(toolbar, state.settingTab);
 							});
-						// used to distinguish buttons for keyboard navigation
 						button.buttonEl.addClass('ntb-tbar-edit');
 					});
 
-				// for performance, render previews after a slight delay
 				requestAnimationFrame(() => {
 					toolbarListItemSetting.descEl.append(ntb.settingsUtils.createToolbarPreviewFr(toolbar, ntb.settingsManager));
 				});
@@ -222,7 +211,6 @@ export function displayToolbarList(state: SettingsTabState, containerEl: HTMLEle
 			}
 		);
 
-		// support up/down arrow keys
 		ntb.registerDomEvent(
 			toolbarListDiv, 'keydown', (keyEvent) => {
 				if (!['ArrowUp', 'ArrowDown'].contains(keyEvent.key)) return;
@@ -254,7 +242,6 @@ export function displayToolbarList(state: SettingsTabState, containerEl: HTMLEle
 	itemsListContainer.appendChild(toolbarListDiv);
 	itemsContainer.appendChild(itemsListContainer);
 
-	// add toolbar
 	new Setting(itemsContainer)
 		.setClass('note-toolbar-setting-button')
 		.setClass('note-toolbar-setting-no-background')
@@ -270,7 +257,6 @@ export function displayToolbarList(state: SettingsTabState, containerEl: HTMLEle
 		});
 
 	containerEl.append(itemsContainer);
-
 }
 
 function renderSearchField(state: SettingsTabState, containerEl: HTMLElement): void {
@@ -291,7 +277,6 @@ function renderSearchField(state: SettingsTabState, containerEl: HTMLElement): v
 				state.containerEl
 					.querySelectorAll<HTMLElement>('.note-toolbar-setting-toolbar-list .setting-item')
 					.forEach((toolbarEl) => {
-						// search contents of name and item text
 						const toolbarName = toolbarEl.querySelector('.setting-item-name')?.textContent?.toLowerCase() ?? '';
 						const allItemText = Array.from(toolbarEl.querySelectorAll('*:not(svg)'))
 							.flatMap(el => Array.from(el.childNodes))
@@ -304,12 +289,10 @@ function renderSearchField(state: SettingsTabState, containerEl: HTMLElement): v
 						const toolbarNameMatches = toolbarName.includes(query);
 						const itemTextMatches = allItemText.includes(query);
 
-						// hide non-matching results
 						(toolbarNameMatches || itemTextMatches) ? toolbarEl.show() : toolbarEl.hide();
 
 						hasMatch = hasMatch || ((toolbarNameMatches || itemTextMatches) && query.length > 0);
 
-						// remove the top border on the first search result
 						if ((toolbarNameMatches || itemTextMatches) && !firstVisibleSet) {
 							toolbarEl.classList.add('note-toolbar-setting-no-border');
 							firstVisibleSet = true;
@@ -318,7 +301,6 @@ function renderSearchField(state: SettingsTabState, containerEl: HTMLElement): v
 						}
 					});
 
-				// if no results, show "no results" message
 				const toolbarListEl = state.containerEl.querySelector('.note-toolbar-setting-toolbar-list') as HTMLElement;
 				toolbarListEl?.querySelector('.note-toolbar-setting-empty-message')?.remove();
 				if (!hasMatch && query.length > 0) {
@@ -327,14 +309,12 @@ function renderSearchField(state: SettingsTabState, containerEl: HTMLElement): v
 						cls: 'note-toolbar-setting-empty-message'
 					});
 				}
-
 			});
 		});
 	toolbarSearchSetting.settingEl.id = 'tbar-search';
 
 	const searchInputEl = toolbarSearchSetting.settingEl.querySelector('input');
 
-	// allow keyboard navigation down to first search result
 	if (searchInputEl) {
 		ntb.registerDomEvent(
 			searchInputEl, 'keydown', (e) => {
@@ -349,12 +329,11 @@ function renderSearchField(state: SettingsTabState, containerEl: HTMLElement): v
 					}
 				}
 			}
-		)
+		);
 	}
 
 	if (Platform.isPhone) {
 		toolbarSearchSetting.settingEl.setAttribute('data-active', 'false');
-		// search field: remove if it's empty and loses focus
 		if (searchInputEl) {
 			ntb.registerDomEvent(
 				searchInputEl, 'blur', (e) => {
@@ -368,7 +347,7 @@ function renderSearchField(state: SettingsTabState, containerEl: HTMLElement): v
 		}
 	}
 	else {
-		toolbarSearchSetting.settingEl.setCssProps({'padding-bottom': 'unset'});
+		toolbarSearchSetting.settingEl.setCssProps({ 'padding-bottom': 'unset' });
 	}
 }
 
@@ -379,7 +358,6 @@ function toggleSearch(state: SettingsTabState, isVisible?: boolean): void {
 			(isVisible !== undefined) ? (!isVisible).toString() : toolbarSearchEl.getAttribute('data-active');
 		if (searchActive === 'true') {
 			toolbarSearchEl.setAttribute('data-active', 'false');
-			// clear search value
 			const searchInputEl = toolbarSearchEl.querySelector('input');
 			if (searchInputEl) {
 				searchInputEl.value = '';
@@ -389,7 +367,6 @@ function toggleSearch(state: SettingsTabState, isVisible?: boolean): void {
 		}
 		else {
 			toolbarSearchEl.setAttribute('data-active', 'true');
-			// set focus in search field
 			const searchInputEl = toolbarSearchEl?.querySelector('input');
 			setTimeout(() => {
 				searchInputEl?.focus();
@@ -404,6 +381,8 @@ function toggleToolbarList(state: SettingsTabState): void {
 		state.isSectionOpen['itemList'] = !state.isSectionOpen['itemList'];
 		itemsContainer.setAttribute('data-active', state.isSectionOpen['itemList'].toString());
 		const headingEl = itemsContainer.querySelector('.setting-item-info .setting-item-name');
-		state.isSectionOpen['itemList'] ? headingEl?.setText(t('setting.toolbars.name')) : headingEl?.setText(t('setting.toolbars.name-with-count', { count: state.ntb.settings.toolbars.length }));
+		state.isSectionOpen['itemList']
+			? headingEl?.setText(t('setting.toolbars.name'))
+			: headingEl?.setText(t('setting.toolbars.name-with-count', { count: state.ntb.settings.toolbars.length }));
 	}
 }

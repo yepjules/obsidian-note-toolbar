@@ -1,4 +1,4 @@
-import { COMMAND_PREFIX_ITEM, COMMAND_PREFIX_TBAR, DEFAULT_SETTINGS, FolderMapping, ItemType, PositionType, SETTINGS_VERSION, t, ToolbarItemSettings, ToolbarSettings } from "Settings/NoteToolbarSettings";
+import { COMMAND_PREFIX_ITEM, COMMAND_PREFIX_TBAR, DEFAULT_ITEM_SETTINGS, DEFAULT_ITEM_VISIBILITY_SETTINGS, DEFAULT_SETTINGS, FolderMapping, ItemType, PositionType, SETTINGS_VERSION, t, ToolbarItemSettings, ToolbarSettings, ViewModeType } from "Settings/NoteToolbarSettings";
 import { getUUID } from "Utils/Utils";
 import NoteToolbarPlugin from "main";
 import { FrontMatterCache, ItemView, Platform, TFile } from "obsidian";
@@ -12,6 +12,162 @@ export default class SettingsManager {
 	constructor(
 		private ntb: NoteToolbarPlugin
 	) {}
+
+	private cloneDefaultItemVisibility() {
+		return JSON.parse(JSON.stringify(DEFAULT_ITEM_VISIBILITY_SETTINGS)) as typeof DEFAULT_ITEM_VISIBILITY_SETTINGS;
+	}
+
+	private normalizeToolbarItem(item: ToolbarItemSettings): boolean {
+		let changed = false;
+
+		if (item.icon == null) {
+			item.icon = DEFAULT_ITEM_SETTINGS.icon;
+			changed = true;
+		}
+		if (item.label == null) {
+			item.label = DEFAULT_ITEM_SETTINGS.label;
+			changed = true;
+		}
+		if (item.tooltip == null) {
+			item.tooltip = DEFAULT_ITEM_SETTINGS.tooltip;
+			changed = true;
+		}
+		if (item.link == null) {
+			item.link = DEFAULT_ITEM_SETTINGS.link;
+			changed = true;
+		}
+		if (item.hasCommand == null) {
+			item.hasCommand = DEFAULT_ITEM_SETTINGS.hasCommand;
+			changed = true;
+		}
+		if (item.inGallery == null) {
+			item.inGallery = DEFAULT_ITEM_SETTINGS.inGallery;
+			changed = true;
+		}
+		if (!item.linkAttr) {
+			item.linkAttr = JSON.parse(JSON.stringify(DEFAULT_ITEM_SETTINGS.linkAttr));
+			changed = true;
+		}
+		else {
+			if (item.linkAttr.commandCheck == null) {
+				item.linkAttr.commandCheck = DEFAULT_ITEM_SETTINGS.linkAttr.commandCheck;
+				changed = true;
+			}
+			if (item.linkAttr.commandId == null) {
+				item.linkAttr.commandId = DEFAULT_ITEM_SETTINGS.linkAttr.commandId;
+				changed = true;
+			}
+			if (item.linkAttr.hasVars == null) {
+				item.linkAttr.hasVars = DEFAULT_ITEM_SETTINGS.linkAttr.hasVars;
+				changed = true;
+			}
+			if (item.linkAttr.type == null) {
+				item.linkAttr.type = DEFAULT_ITEM_SETTINGS.linkAttr.type;
+				changed = true;
+			}
+		}
+
+		if (!item.visibility) {
+			item.visibility = this.cloneDefaultItemVisibility();
+			changed = true;
+		}
+
+		for (const platform of ['desktop', 'mobile', 'tablet'] as const) {
+			const currentVisibility = item.visibility?.[platform] as
+				| { components?: unknown; allViews?: { components?: unknown } }
+				| undefined;
+			const components =
+				Array.isArray(currentVisibility?.components) ? currentVisibility.components
+				: Array.isArray(currentVisibility?.allViews?.components) ? currentVisibility.allViews.components
+				: DEFAULT_ITEM_VISIBILITY_SETTINGS[platform].components;
+
+			if (!currentVisibility || !Array.isArray(currentVisibility.components)) {
+				item.visibility[platform] = { components: [...components] };
+				changed = true;
+			}
+		}
+
+		if (item.visibility.viewMode == null) {
+			item.visibility.viewMode = ViewModeType.All;
+			changed = true;
+		}
+
+		return changed;
+	}
+
+	private normalizeToolbar(toolbar: ToolbarSettings): boolean {
+		let changed = false;
+
+		if (toolbar.commandPosition == null) {
+			toolbar.commandPosition = PositionType.Floating;
+			changed = true;
+		}
+		if (toolbar.customClasses == null) {
+			toolbar.customClasses = '';
+			changed = true;
+		}
+		if (!Object.prototype.hasOwnProperty.call(toolbar, 'defaultItem')) {
+			toolbar.defaultItem = null;
+			changed = true;
+		}
+		if (!Array.isArray(toolbar.defaultStyles)) {
+			toolbar.defaultStyles = [];
+			changed = true;
+		}
+		if (toolbar.hasCommand == null) {
+			toolbar.hasCommand = false;
+			changed = true;
+		}
+		if (!Array.isArray(toolbar.items)) {
+			toolbar.items = [];
+			changed = true;
+		}
+		if (!Array.isArray(toolbar.mobileStyles)) {
+			toolbar.mobileStyles = [];
+			changed = true;
+		}
+		if (!toolbar.position) {
+			toolbar.position = {};
+			changed = true;
+		}
+
+		const desktopPosition = toolbar.position.desktop?.allViews?.position ?? PositionType.Props;
+		if (!toolbar.position.desktop?.allViews?.position) {
+			toolbar.position.desktop = { allViews: { position: desktopPosition } };
+			changed = true;
+		}
+
+		const mobilePosition = toolbar.position.mobile?.allViews?.position ?? desktopPosition;
+		if (!toolbar.position.mobile?.allViews?.position) {
+			toolbar.position.mobile = { allViews: { position: mobilePosition } };
+			changed = true;
+		}
+
+		const tabletPosition = toolbar.position.tablet?.allViews?.position ?? mobilePosition;
+		if (!toolbar.position.tablet?.allViews?.position) {
+			toolbar.position.tablet = { allViews: { position: tabletPosition } };
+			changed = true;
+		}
+
+		if (!toolbar.updated) {
+			toolbar.updated = new Date().toISOString();
+			changed = true;
+		}
+
+		for (const item of toolbar.items) {
+			changed = this.normalizeToolbarItem(item) || changed;
+		}
+
+		return changed;
+	}
+
+	private normalizeSettings(): boolean {
+		let changed = false;
+		for (const toolbar of this.ntb.settings.toolbars) {
+			changed = this.normalizeToolbar(toolbar) || changed;
+		}
+		return changed;
+	}
 	
 	/**
 	 * Adds the given toolbar to the plugin settings.
@@ -525,6 +681,10 @@ export default class SettingsManager {
 			const migrator = new SettingsMigrator(this.ntb);
 			migrator.run(loaded_settings, old_version);
 			// don't render the initial toolbar, as managers + helpers may not be initialized yet
+			await this.save(false);
+		}
+
+		if (this.normalizeSettings()) {
 			await this.save(false);
 		}
 

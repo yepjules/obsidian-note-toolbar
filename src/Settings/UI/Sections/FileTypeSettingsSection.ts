@@ -1,7 +1,7 @@
 import { debounce, Setting, SettingGroup, ToggleComponent } from 'obsidian';
 import { t } from 'Settings/NoteToolbarSettings';
 import { fixToggleTab, learnMoreFr } from '../Utils/SettingsUIUtils';
-import { SettingsTabState } from './types';
+import type { SettingsTabState } from './types';
 
 export function displayFileTypeSettings(state: SettingsTabState, containerEl: HTMLElement): void {
 
@@ -135,5 +135,4 @@ export function displayFileTypeSettings(state: SettingsTabState, containerEl: HT
 
 	collapsibleEl.appendChild(collapsibleContainerEl);
 	containerEl.appendChild(collapsibleEl);
-
 }

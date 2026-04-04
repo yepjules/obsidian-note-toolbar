@@ -5,7 +5,7 @@ import { moveElement } from 'Utils/Utils';
 import FolderSuggester from '../Suggesters/FolderSuggester';
 import ToolbarSuggester from '../Suggesters/ToolbarSuggester';
 import { iconTextFr, learnMoreFr } from '../Utils/SettingsUIUtils';
-import { SettingsTabState } from './types';
+import type { SettingsTabState } from './types';
 
 export function displayRules(state: SettingsTabState, containerEl: HTMLElement): void {
 
@@ -20,7 +20,6 @@ export function displayRules(state: SettingsTabState, containerEl: HTMLElement):
 		.setName(t('setting.display-rules.name'))
 		.setDesc(learnMoreFr(t('setting.display-rules.description'), 'Defining-where-to-show-toolbars'));
 
-	// make collapsible
 	state.renderSettingToggle(rulesSetting, '.note-toolbar-setting-mappings-container', 'displayRules');
 
 	const collapsibleContainerEl = createDiv();
@@ -30,7 +29,6 @@ export function displayRules(state: SettingsTabState, containerEl: HTMLElement):
 
 	settingsContainerEl.appendChild(collapsibleContainerEl);
 	containerEl.append(settingsContainerEl);
-
 }
 
 function displayMappingsSettings(state: SettingsTabState, containerEl: HTMLElement): void {
@@ -82,25 +80,22 @@ function displayMappingsSettings(state: SettingsTabState, containerEl: HTMLEleme
 
 	const settingItemsEl = containerEl.querySelector('.setting-group .setting-items');
 	if (settingItemsEl) {
-
 		const itemsContainerEl = createDiv();
 		itemsContainerEl.addClass('note-toolbar-setting-items-list-container');
 
 		if (ntb.settings.folderMappings.length == 0) {
-
 			const emptyMsgEl = createDiv({ text:
 				ntb.settingsUtils.emptyMessageFr(
 					// eslint-disable-next-line @typescript-eslint/no-misused-promises -- emptyMessageFr callback typed as void; async is intentional
 					t('setting.mappings.label-empty'), t('setting.mappings.link-create'), async () => {
-					const newMapping = { folder: "", toolbar: "" };
-					ntb.settings.folderMappings.push(newMapping);
-					await ntb.settingsManager.save();
-					state.refresh('.note-toolbar-sortablejs-list > div:last-child input[type="search"]', true);
-				}) });
+						const newMapping = { folder: "", toolbar: "" };
+						ntb.settings.folderMappings.push(newMapping);
+						await ntb.settingsManager.save();
+						state.refresh('.note-toolbar-sortablejs-list > div:last-child input[type="search"]', true);
+					}) });
 			emptyMsgEl.addClass('note-toolbar-setting-empty-message');
 
 			itemsContainerEl.append(emptyMsgEl);
-
 		}
 		else {
 			const toolbarFolderListEl = createDiv();
@@ -134,28 +129,22 @@ function displayMappingsSettings(state: SettingsTabState, containerEl: HTMLEleme
 
 		settingItemsEl.appendChild(itemsContainerEl);
 
-	//
-	// "Add a new mapping" button
-	//
-
-	new Setting(settingItemsEl as HTMLElement)
-		.setClass('note-toolbar-setting-button')
-		.setClass('note-toolbar-setting-no-border')
-		.addButton((button: ButtonComponent) => {
-			button
-				.setTooltip(t('setting.mappings.button-new-tooltip'))
-				.setCta()
-				.onClick(async () => {
-					const newMapping = { folder: "", toolbar: "" };
-					ntb.settings.folderMappings.push(newMapping);
-					await ntb.settingsManager.save();
-					state.refresh('.note-toolbar-sortablejs-list > div:last-child input[type="search"]', true);
-				});
-			button.buttonEl.setText(iconTextFr('plus', t('setting.mappings.button-new')));
-		});
-
+		new Setting(settingItemsEl as HTMLElement)
+			.setClass('note-toolbar-setting-button')
+			.setClass('note-toolbar-setting-no-border')
+			.addButton((button: ButtonComponent) => {
+				button
+					.setTooltip(t('setting.mappings.button-new-tooltip'))
+					.setCta()
+					.onClick(async () => {
+						const newMapping = { folder: "", toolbar: "" };
+						ntb.settings.folderMappings.push(newMapping);
+						await ntb.settingsManager.save();
+						state.refresh('.note-toolbar-sortablejs-list > div:last-child input[type="search"]', true);
+					});
+				button.buttonEl.setText(iconTextFr('plus', t('setting.mappings.button-new')));
+			});
 	}
-
 }
 
 function generateMappingForm(state: SettingsTabState, mapping: FolderMapping, rowId: string): HTMLDivElement {
@@ -238,7 +227,7 @@ function generateMappingForm(state: SettingsTabState, mapping: FolderMapping, ro
 			cb.extraSettingsEl.setAttribute('data-row-id', state.itemListIdCounter.toString());
 			cb.extraSettingsEl.tabIndex = 0;
 			ntb.registerDomEvent(
-				cb.extraSettingsEl,	'keydown', (e) => {
+				cb.extraSettingsEl, 'keydown', (e) => {
 					const currentEl = e.target as HTMLElement;
 					const elRowId = currentEl.getAttribute('data-row-id');
 					elRowId ? state.listMoveHandlerById(e, elRowId) : undefined;
@@ -249,5 +238,4 @@ function generateMappingForm(state: SettingsTabState, mapping: FolderMapping, ro
 	toolbarFolderListItemDiv.append(itemHandleDiv);
 
 	return toolbarFolderListItemDiv;
-
 }

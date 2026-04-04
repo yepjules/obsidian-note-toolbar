@@ -3,7 +3,7 @@ import { SettingType, t } from 'Settings/NoteToolbarSettings';
 import TextToolbar from 'Toolbar/TextToolbar';
 import ToolbarSuggester from '../Suggesters/ToolbarSuggester';
 import { fixToggleTab, learnMoreFr } from '../Utils/SettingsUIUtils';
-import { SettingsTabState } from './types';
+import type { SettingsTabState } from './types';
 
 export function displayAppToolbarSettings(state: SettingsTabState, containerEl: HTMLElement): void {
 
@@ -18,17 +18,12 @@ export function displayAppToolbarSettings(state: SettingsTabState, containerEl: 
 		.setName(t('setting.display-locations.name'))
 		.setDesc(learnMoreFr(t('setting.display-locations.description'), 'Toolbars-within-the-app'));
 
-	// make collapsible
 	state.renderSettingToggle(appToolbarSetting, '.note-toolbar-setting-app-toolbars-container', 'appToolbars');
 
 	const collapsibleContainerEl = createDiv();
 	collapsibleContainerEl.addClass('note-toolbar-setting-items-collapsible-container');
 
 	const appToolbarGroup = new SettingGroup(collapsibleContainerEl);
-
-	//
-	// Editor menu
-	//
 
 	if (Platform.isDesktop) {
 		appToolbarGroup.addSetting((editorMenuSetting) => {
@@ -45,7 +40,6 @@ export function displayAppToolbarSettings(state: SettingsTabState, containerEl: 
 							const isValid = await ntb.settingsUtils.updateItemComponentStatus(state.settingTab, name, SettingType.Toolbar, editorMenuSetting.controlEl, undefined, 'beforeend');
 							const newToolbar = isValid ? ntb.settingsManager.getToolbarByName(name) : undefined;
 							ntb.settings.editorMenuToolbar = newToolbar?.uuid ?? null;
-							// toggle editor menu as toolbar setting
 							const hasEditorMenuToolbar = !!ntb.settings.editorMenuToolbar;
 							const editorMenuAsTbarSettingEl = state.containerEl.querySelector('#note-toolbar-editor-menu-as-tbar-setting');
 							editorMenuAsTbarSettingEl?.setAttribute('data-active', hasEditorMenuToolbar.toString());
@@ -77,16 +71,12 @@ export function displayAppToolbarSettings(state: SettingsTabState, containerEl: 
 		});
 	}
 
-	//
-	// File menu
-	//
-
 	appToolbarGroup.addSetting((showToolbarInFileMenuSetting) => {
 		showToolbarInFileMenuSetting
 			.setName(t('setting.display-contexts.option-filemenu'))
 			.setDesc(learnMoreFr(t('setting.display-contexts.option-filemenu-description'), 'Toolbars-within-the-app#File-menu'))
 			.addToggle((toggle: ToggleComponent) => {
-				toggle.setValue(ntb.settings.showToolbarInFileMenu)
+				toggle.setValue(ntb.settings.showToolbarInFileMenu);
 				toggle.onChange(async (value) => {
 					ntb.settings.showToolbarInFileMenu = value;
 					await ntb.settingsManager.save();
@@ -94,10 +84,6 @@ export function displayAppToolbarSettings(state: SettingsTabState, containerEl: 
 				fixToggleTab(toggle);
 			});
 	});
-
-	//
-	// New tab view
-	//
 
 	appToolbarGroup.addSetting((emptyViewSetting) => {
 		const existingEmptyViewToolbar = ntb.settingsManager.getToolbarById(ntb.settings.emptyViewToolbar);
@@ -113,11 +99,9 @@ export function displayAppToolbarSettings(state: SettingsTabState, containerEl: 
 						const isValid = await ntb.settingsUtils.updateItemComponentStatus(state.settingTab, name, SettingType.Toolbar, emptyViewSetting.controlEl, undefined, 'beforeend');
 						const newToolbar = isValid ? ntb.settingsManager.getToolbarByName(name) : undefined;
 						ntb.settings.emptyViewToolbar = newToolbar?.uuid ?? null;
-						// toggle launchpad setting
 						const hasEmptyViewToolbar = !!ntb.settings.emptyViewToolbar;
 						const launchpadSettingEl = state.containerEl.querySelector('#note-toolbar-launchpad-setting');
 						launchpadSettingEl?.setAttribute('data-active', hasEmptyViewToolbar.toString());
-						// update toolbar preview
 						ntb.settingsUtils.setFieldPreview(emptyViewSetting, newToolbar);
 						await ntb.settingsManager.save();
 					}, 250));
@@ -145,10 +129,6 @@ export function displayAppToolbarSettings(state: SettingsTabState, containerEl: 
 		launchpadSetting.settingEl.setAttribute('data-active', hasEmptyViewToolbar.toString());
 	});
 
-	//
-	// Selected text
-	//
-
 	appToolbarGroup.addSetting((textToolbarSetting) => {
 		const existingTextToolbar = ntb.settingsManager.getToolbarById(ntb.settings.textToolbar);
 		textToolbarSetting
@@ -167,11 +147,9 @@ export function displayAppToolbarSettings(state: SettingsTabState, containerEl: 
 							ntb.textToolbar = TextToolbar(ntb);
 							ntb.registerEditorExtension(ntb.textToolbar);
 						}
-						// toggle keyboard setting
 						const hasTextToolbar = !!ntb.settings.textToolbar;
 						const textToolbarOnKeyboardSettingEl = state.containerEl.querySelector('#ntb-text-tbar-keyboard-setting');
 						textToolbarOnKeyboardSettingEl?.setAttribute('data-active', hasTextToolbar.toString());
-						// update toolbar preview
 						ntb.settingsUtils.setFieldPreview(textToolbarSetting, newToolbar);
 						await ntb.settingsManager.save();
 					}, 250));
@@ -198,10 +176,6 @@ export function displayAppToolbarSettings(state: SettingsTabState, containerEl: 
 		const hasTextToolbar = !!ntb.settings.textToolbar;
 		textToolbarOnKeyboardSetting.settingEl.setAttribute('data-active', hasTextToolbar.toString());
 	});
-
-	//
-	// Web viewer
-	//
 
 	if (Platform.isDesktop) {
 		if (ntb.adapters.isInternalPluginEnabled('webviewer')) {
@@ -231,5 +205,4 @@ export function displayAppToolbarSettings(state: SettingsTabState, containerEl: 
 
 	settingsContainerEl.appendChild(collapsibleContainerEl);
 	containerEl.append(settingsContainerEl);
-
 }

@@ -2,7 +2,7 @@ import { setIcon, Setting, SettingGroup, ToggleComponent } from 'obsidian';
 import { t } from 'Settings/NoteToolbarSettings';
 import IconSuggestModal from '../Modals/IconSuggestModal';
 import { fixToggleTab, learnMoreFr } from '../Utils/SettingsUIUtils';
-import { SettingsTabState } from './types';
+import type { SettingsTabState } from './types';
 
 export function displayOtherSettings(state: SettingsTabState, containerEl: HTMLElement): void {
 
@@ -95,7 +95,7 @@ export function displayOtherSettings(state: SettingsTabState, containerEl: HTMLE
 			.setName(t('setting.other.show-edit-tbar.name'))
 			.setDesc(t('setting.other.show-edit-tbar.description'))
 			.addToggle((toggle) => {
-				toggle.setValue(ntb.settings.showEditInFabMenu)
+				toggle.setValue(ntb.settings.showEditInFabMenu);
 				toggle.onChange(async (value) => {
 					ntb.settings.showEditInFabMenu = value;
 					await ntb.settingsManager.save();
@@ -109,17 +109,16 @@ export function displayOtherSettings(state: SettingsTabState, containerEl: HTMLE
 			.setName(t('setting.other.debugging.name'))
 			.setDesc(t('setting.other.debugging.description'))
 			.addToggle((toggle) => {
-				toggle.setValue(ntb.settings.debugEnabled)
+				toggle.setValue(ntb.settings.debugEnabled);
 				toggle.onChange(async (value) => {
 					ntb.settings.debugEnabled = value;
 					ntb.toggleDebugging();
-					ntb.debug('Note Toolbar debugging:', value); // should not output if debugging is disabled
+					ntb.debug('Note Toolbar debugging:', value);
 					await ntb.settingsManager.save();
 				});
 				fixToggleTab(toggle);
 			});
 	});
-
 }
 
 function updateNoteToolbarIcon(state: SettingsTabState, settingEl: HTMLElement, selectedIcon: string): void {
