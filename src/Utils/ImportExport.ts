@@ -1,6 +1,6 @@
 import NoteToolbarPlugin from "main";
 import { DEFAULT_ITEM_VISIBILITY_SETTINGS, DEFAULT_STYLE_OPTIONS, ExportSettings, ItemType, MOBILE_STYLE_OPTIONS, PositionType, SCRIPT_ATTRIBUTE_MAP, ScriptConfig, t, ToolbarItemSettings, ToolbarSettings } from "Settings/NoteToolbarSettings";
-import { getUUID } from "./Utils";
+import { escapeRegExp, getUUID } from "./Utils";
 import { getIcon, Notice, TFile, TFolder } from "obsidian";
 
 const toIconizeFormat = (s: string) => 
@@ -234,7 +234,7 @@ function replaceScriptDelimiters(ntb: NoteToolbarPlugin, input: string): string 
     }
     if (ntb.adapters.hasPlugin(ItemType.Dataview)) {
         const dvPrefix = ntb.adapters.dv?.getSetting('inlineQueryPrefix') || '=';
-        const regex = new RegExp(`^${dvPrefix}\\s*(.*)`, 'gm');
+        const regex = new RegExp(`^${escapeRegExp(dvPrefix)}\\s*(.*)`, 'gm');
         input = input.replace(regex, '{{dv: $1}}');
     }
     return input;

@@ -1,6 +1,7 @@
 import NoteToolbarPlugin from "main";
 import { TFile, FileSystemAdapter } from "obsidian";
 import { ErrorBehavior, ItemType, ToolbarSettings } from "Settings/NoteToolbarSettings";
+import { escapeRegExp } from "Utils/Utils";
 
 /**
  * Provides utilities to resolve variables.
@@ -36,7 +37,8 @@ export default class VariableResolver {
     }
 
 	replaceVar(s: string, varKey: string, replaceText: string): string {
-		const regex = new RegExp(`{{\\s*(encode:)?\\s*${varKey}\\s*}}`);
+		// nosemgrep: detect-non-literal-regexp — varKey is escaped via escapeRegExp
+		const regex = new RegExp(`{{\\s*(encode:)?\\s*${escapeRegExp(varKey)}\\s*}}`);
 		return s.replace(regex, (_, encode) => encode ? encodeURIComponent(replaceText) : replaceText);
 	}
 
@@ -49,7 +51,8 @@ export default class VariableResolver {
 	 */
 	async replaceVars(s: string, file: TFile | null, errorBehavior: ErrorBehavior = ErrorBehavior.Report): Promise<string> {
 
-		const hasVar = (varKey: string) => new RegExp(`\\{\\{\\s*(?:encode:)?\\s*${varKey}\\s*\\}\\}`).test(s);
+		// nosemgrep: detect-non-literal-regexp — varKey is escaped via escapeRegExp
+		const hasVar = (varKey: string) => new RegExp(`\\{\\{\\s*(?:encode:)?\\s*${escapeRegExp(varKey)}\\s*\\}\\}`).test(s);
 
 		// SELECTION
 		if (hasVar('selection')) {

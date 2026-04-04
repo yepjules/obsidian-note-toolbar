@@ -625,7 +625,15 @@ export function removeComponentVisibility(platform: { components: ComponentType[
  * @returns true if a menu is used in the toolbar; false otherwise
  */
 export function toolbarHasMenu(toolbar: ToolbarSettings): boolean {
-	return toolbar.items.some(item => 
+	return toolbar.items.some(item =>
 		(item.linkAttr.type === ItemType.Menu) && (item.link)
 	);
+}
+
+/**
+ * Escapes special regex characters in a string so it can be safely
+ * interpolated into a RegExp constructor.
+ */
+export function escapeRegExp(s: string): string {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
