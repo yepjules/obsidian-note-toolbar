@@ -145,7 +145,7 @@ export default class DataviewAdapter extends Adapter {
         try {
             if (this.adapterApi) {
                 // this.noteToolbar?.debug("evaluate() " + expression);
-                let dvResult = await (this.adapterApi as any).evaluateInline(expression, activeFile?.path);
+                let dvResult = await (this.adapterApi).evaluateInline(expression, activeFile?.path);
                 // this.noteToolbar?.debug("evaluate() result:", dvResult);
                 if (containerEl) {
                     containerEl.empty();
@@ -239,7 +239,7 @@ export default class DataviewAdapter extends Adapter {
              result = await Promise.resolve(func(dataviewLocalApi, args));
              if (result && this.ntb) {
                     await this.adapterApi.renderValue(
-                        result as any,
+                        result,
                         containerEl,
                         component,
                         activeFilePath
@@ -280,7 +280,7 @@ export default class DataviewAdapter extends Adapter {
         try {
             if (this.adapterApi) {
                 // this.noteToolbar?.debug("executeJs() ", expression);
-                await (this.adapterApi as any).executeJs(expression, resultEl, component, activeFile?.path);
+                await (this.adapterApi).executeJs(expression, resultEl, component, activeFile?.path);
                 // this.noteToolbar?.debug("executeJs() result:", resultEl);
                 if (!containerEl) {
                     const errorEl = resultEl.querySelector('.dataview-error');
@@ -334,7 +334,7 @@ export default class DataviewAdapter extends Adapter {
             if (this.adapterApi) {
                 this.ntb?.debug("query() " + expression);
                 // returns a Promise<Result<QueryResult, string>>
-                let dvResult = await (this.adapterApi as any).queryMarkdown(expression, activeFile, this.adapterApi.settings);
+                let dvResult = await (this.adapterApi).queryMarkdown(expression, activeFile, this.adapterApi.settings);
                 this.ntb?.debug("query() result: ", dvResult);
                 if (containerEl) {
                     containerEl.empty();

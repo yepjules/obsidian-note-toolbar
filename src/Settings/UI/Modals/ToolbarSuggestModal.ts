@@ -137,6 +137,7 @@ export default class ToolbarSuggestModal extends SuggestModal<ToolbarSettings> {
      * Closes the modal and executes the given item.
      * @param toolbar ToolbarSettings to use.
      */
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- Overrides Obsidian SuggestModal.onChooseSuggestion typed as void; async is intentional
     async onChooseSuggestion(toolbar: ToolbarSettings, event: MouseEvent | KeyboardEvent) {
         await this.ntb.settingsManager.updateRecentList(LocalVar.RecentToolbars, toolbar.name);
         this.callback(toolbar);

@@ -27,6 +27,7 @@ export default class ToolbarElementHelper {
         // there's only one active view on phones, so ignore it and return everything
         if (Platform.isPhone) {
             const allToolbarEls: HTMLElement[] = [];
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- querySelectorAll returns Element; cast to HTMLElement required for downstream push
             const viewToolbarEls = activeDocument.querySelectorAll('.cg-note-toolbar-container') as NodeListOf<HTMLElement>;
             viewToolbarEls?.forEach(el => allToolbarEls.push(el));
             return allToolbarEls as unknown as NodeListOf<HTMLElement>;
@@ -34,6 +35,7 @@ export default class ToolbarElementHelper {
         // otherwise, scope to the view if provided
         let toolbarViewEl = view ? view.containerEl : this.ntb.app.workspace.getActiveViewOfType(ItemView)?.containerEl as HTMLElement;
         toolbarViewEl = toolbarViewEl?.closest('.modal-container .note-toolbar-ui') ?? toolbarViewEl;
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion -- querySelectorAll returns NodeListOf<Element>; cast to HTMLElement required for return type
         const viewToolbarEls = toolbarViewEl?.querySelectorAll('.cg-note-toolbar-container') as NodeListOf<HTMLElement>;
         return viewToolbarEls || ([] as unknown as NodeListOf<HTMLElement>);
     }
@@ -47,7 +49,7 @@ export default class ToolbarElementHelper {
         const currentView = view ?? this.ntb.app.workspace.getActiveViewOfType(MarkdownView);
         if (!currentView) return null;
         const currentMode = currentView.getMode();
-        const currentViewEl = currentView.containerEl as HTMLElement;
+        const currentViewEl = currentView.containerEl;
         // get the props container based on view mode; fix for toolbar not showing below props in reading mode, in notes with an embed (#392)
         const propertiesContainer = currentViewEl?.querySelector(`.markdown-${currentMode === 'preview' ? 'reading' : 'source'}-view .metadata-container`) as HTMLElement;
         // fix for toolbar rendering in Make.md frames, causing unpredictable behavior (#151)

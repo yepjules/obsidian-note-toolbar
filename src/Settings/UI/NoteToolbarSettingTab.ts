@@ -219,7 +219,8 @@ export default class NoteToolbarSettingTab extends PluginSettingTab {
 		toolbarListDiv.addClass("note-toolbar-setting-toolbar-list");
 		if (this.ntb.settings.toolbars.length == 0) {
 
-			const emptyMsgEl = createDiv({ text: 
+			const emptyMsgEl = createDiv({ text:
+				// eslint-disable-next-line @typescript-eslint/no-misused-promises -- emptyMessageFr callback typed as void; async is intentional
 				this.ntb.settingsUtils.emptyMessageFr(t('setting.toolbars.label-empty-create-tbar'), t('setting.toolbars.link-create'), async () => {
 					const newToolbar = await this.ntb.settingsManager.newToolbar();
 					this.ntb.settingsManager.openToolbarSettings(newToolbar, this);
@@ -653,8 +654,9 @@ export default class NoteToolbarSettingTab extends PluginSettingTab {
 
 			if (this.ntb.settings.folderMappings.length == 0) {
 
-				const emptyMsgEl = createDiv({ text: 
+				const emptyMsgEl = createDiv({ text:
 					this.ntb.settingsUtils.emptyMessageFr(
+						// eslint-disable-next-line @typescript-eslint/no-misused-promises -- emptyMessageFr callback typed as void; async is intentional
 						t('setting.mappings.label-empty'), t('setting.mappings.link-create'), async () => {
 						let newMapping = { folder: "", toolbar: "" };
 						this.ntb.settings.folderMappings.push(newMapping);
@@ -683,6 +685,7 @@ export default class NoteToolbarSettingTab extends PluginSettingTab {
 					handle: '.sortable-handle',
 					onChange: (item) => navigator.vibrate(50),
 					onChoose: (item) => navigator.vibrate(50),
+					// eslint-disable-next-line @typescript-eslint/no-misused-promises -- SortableJS onSort callback typed as void; async needed to save settings
 					onSort: async (item) => {
 						this.ntb.debug("sortable: index: ", item.oldIndex, " -> ", item.newIndex);
 						if (item.oldIndex !== undefined && item.newIndex !== undefined) {

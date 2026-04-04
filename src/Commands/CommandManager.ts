@@ -27,19 +27,25 @@ export default class CommandManager {
         this.ntb.addCommand({ id: 'open-help', name: t('command.name-open-help'), callback: async () => this.ntb.app.workspace.getLeaf(true).setViewState({ type: VIEW_TYPE_HELP, active: true }) });
 
         this.ntb.addCommand({ id: 'open-item-suggester', name: t('command.name-item-suggester'), callback: async () => this.openQuickTools() });
-        this.ntb.addCommand({ id: 'open-item-suggester-current', name: t('command.name-item-suggester-current'), icon: this.ntb.settings.icon, checkCallback: this.checkHasToolbarAndRun(async () => { 
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- Obsidian addCommand checkCallback accepts () => void; async is intentional
+        this.ntb.addCommand({ id: 'open-item-suggester-current', name: t('command.name-item-suggester-current'), icon: this.ntb.settings.icon, checkCallback: this.checkHasToolbarAndRun(async () => {
             const currentToolbar = this.ntb.settingsManager.getCurrentToolbar();
             if (currentToolbar) this.openQuickTools(currentToolbar.uuid);
         }) });
         this.ntb.addCommand({ id: 'open-toolbar-suggester', name: (t('command.name-toolbar-suggester')), callback: async () => this.openToolbarSuggester() });
         this.ntb.addCommand({ id: 'open-settings', name: t('command.name-settings'), callback: async () => this.openSettings() });
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- Obsidian addCommand checkCallback accepts () => void; async is intentional
         this.ntb.addCommand({ id: 'open-toolbar-settings', name: t('command.name-toolbar-settings'), checkCallback: this.checkHasToolbarAndRun(async () => { this.openToolbarSettings(); }) });
 
         this.ntb.addCommand({ id: 'toggle-base-toolbar', name: t('command.name-toggle-base-toolbar'), callback: () => this.toggleUi('baseToolbar', 'toggle') });
 
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- Obsidian addCommand checkCallback accepts () => void; async is intentional
         this.ntb.addCommand({ id: 'toggle-properties', name: t('command.name-toggle-properties'), checkCallback: this.checkViewAndRun('markdown', async () => { this.toggleUi('props', 'toggle'); }) });
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- Obsidian addCommand checkCallback accepts () => void; async is intentional
         this.ntb.addCommand({ id: 'show-properties', name: t('command.name-show-properties'),  checkCallback: this.checkViewAndRun('markdown', async () => { this.toggleUi('props', 'show'); }) });
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- Obsidian addCommand checkCallback accepts () => void; async is intentional
         this.ntb.addCommand({ id: 'hide-properties', name: t('command.name-hide-properties'), checkCallback: this.checkViewAndRun('markdown', async () => { this.toggleUi('props', 'hide'); }) });
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- Obsidian addCommand checkCallback accepts () => void; async is intentional
         this.ntb.addCommand({ id: 'fold-properties', name: t('command.name-fold-properties'), checkCallback: this.checkViewAndRun('markdown', async () => { this.toggleUi('props', 'fold'); }) });
 
         this.ntb.addCommand({ id: 'toggle-lock-callouts', name: t('command.name-toggle-lock-callouts'), callback: async () => this.toggleLockCallouts() });
@@ -352,6 +358,7 @@ export default class CommandManager {
      */
     async openToolbarSuggester(): Promise<void> {
         let activeFile = this.ntb.app.workspace.getActiveFile();
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- ToolbarSuggestModal callback typed as void; async is intentional
         const modal = new ToolbarSuggestModal(this.ntb, false, false, false, async (toolbar: ToolbarSettings) => {
             await this.ntb.commands.openQuickTools(toolbar.uuid);
         });
@@ -362,6 +369,7 @@ export default class CommandManager {
      * Opens the toolbar suggester and replaces the current toolbar using the property.
      */
     async swapToolbar(): Promise<void> {
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- ToolbarSuggestModal callback typed as void; async is intentional
         const modal = new ToolbarSuggestModal(this.ntb, true, true, false, async (toolbar: ToolbarSettings) => {
             const activeFile = this.ntb.app.workspace.getActiveFile();
             if (activeFile) {

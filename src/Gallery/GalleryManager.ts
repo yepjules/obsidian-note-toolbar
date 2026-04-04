@@ -41,6 +41,7 @@ export default class GalleryManager {
 			}
         }
         
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- ToolbarSuggestModal callback typed as void; async is intentional
         const toolbarSuggester = new ToolbarSuggestModal(this.ntb, true, false, true, async (toolbar: ToolbarSettings) => addItemToToolbar(toolbar));
 
         const doNextStep = () => {

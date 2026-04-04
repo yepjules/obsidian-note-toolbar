@@ -10,7 +10,7 @@ export default class RibbonMenu {
 
     async render(event: MouseEvent) {
 
-        switch (this.ntb.settings.ribbonAction as RibbonAction) {
+        switch (this.ntb.settings.ribbonAction) {
             case (RibbonAction.ItemSuggester): {
                 await this.ntb.commands.openQuickTools();
                 break;

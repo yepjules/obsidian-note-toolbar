@@ -90,6 +90,7 @@ export default class GalleryView extends ItemView {
 			.setClass('note-toolbar-setting-no-border')
 			.setClass('note-toolbar-gallery-view-search')
 			.addSearch((cb) => {
+				// eslint-disable-next-line @typescript-eslint/no-misused-promises -- ItemSuggester callback typed as void; async is intentional
 				new ItemSuggester(this.ntb, undefined, cb.inputEl, async (galleryItem) => {
 					this.ntb.gallery.addItem(galleryItem);
 					cb.inputEl.value = '';

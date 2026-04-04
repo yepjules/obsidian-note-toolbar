@@ -54,6 +54,7 @@ export default class ToolbarSettingsModal extends Modal {
 	/**
 	 * Removes modal window and refreshes the parent settings window.
 	 */
+	// eslint-disable-next-line @typescript-eslint/no-misused-promises -- Overrides Obsidian Modal.onClose typed as void; async is intentional
 	async onClose(): Promise<void> {
 		const { contentEl } = this;
 		contentEl.empty();
@@ -312,6 +313,7 @@ export default class ToolbarSettingsModal extends Modal {
 				.setDesc(t('setting.position.option-defaultitem-description'))
 				.setClass('note-toolbar-setting-item-full-width-phone')
 				.addSearch((cb) => {
+					// eslint-disable-next-line @typescript-eslint/no-misused-promises -- ItemSuggester callback typed as void; async is intentional
 					new ItemSuggester(this.ntb, this.toolbar, cb.inputEl, async (item) => {
 						removeFieldError(cb.inputEl, 'beforeend');
 						cb.inputEl.value = item.label || item.tooltip;

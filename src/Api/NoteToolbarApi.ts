@@ -104,7 +104,8 @@ export default class NoteToolbarApi<T> implements INoteToolbarApi<T> {
 
         const suggester = new NtbSuggester(this.ntb, filePaths, files, options);
 
-        const promise = new Promise((resolve: (value: TAbstractFile) => void, reject: (reason?: Error) => void) => 
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- Promise executor passes async callbacks to openAndGetValue which expects void-typed resolve/reject
+        const promise = new Promise((resolve: (value: TAbstractFile) => void, reject: (reason?: Error) => void) =>
             suggester.openAndGetValue(resolve, reject)
         );
 
@@ -231,7 +232,7 @@ export default class NoteToolbarApi<T> implements INoteToolbarApi<T> {
 
 		// apply custom classes to the sub-menu by getting the note's toolbar 
 		const activeToolbar = this.ntb.settingsManager.getCurrentToolbar();
-		if (activeToolbar && activeToolbar.customClasses) menu.dom.addClasses([...activeToolbar.customClasses.split(' ')]);
+		if (activeToolbar?.customClasses) menu.dom.addClasses([...activeToolbar.customClasses.split(' ')]);
         if (options?.class) menu.dom.addClasses([...options.class.split(' ')]);
 
         // show at text cursor, with a fallback to the mouse position
@@ -286,7 +287,8 @@ export default class NoteToolbarApi<T> implements INoteToolbarApi<T> {
 
         const prompt = new NtbPrompt(this.ntb, options);
 
-        const promise = new Promise((resolve: (value: string) => void, reject: (reason?: Error) => void) => 
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- Promise executor passes async callbacks to openAndGetValue which expects void-typed resolve/reject
+        const promise = new Promise((resolve: (value: string) => void, reject: (reason?: Error) => void) =>
             prompt.openAndGetValue(resolve, reject)
         );
 
@@ -350,7 +352,8 @@ export default class NoteToolbarApi<T> implements INoteToolbarApi<T> {
 
         const suggester = new NtbSuggester(this.ntb, values, keys, options);
 
-        const promise = new Promise((resolve: (value: T) => void, reject: (reason?: Error) => void) => 
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- Promise executor passes async callbacks to openAndGetValue which expects void-typed resolve/reject
+        const promise = new Promise((resolve: (value: T) => void, reject: (reason?: Error) => void) =>
             suggester.openAndGetValue(resolve, reject)
         );
 

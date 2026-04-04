@@ -67,7 +67,7 @@ export default class ToolbarItemHandler {
      * Handles the provided script item, based on the provided configuration.
      */
     async handleItemScript(toolbarItem: ToolbarItemSettings | undefined) {
-        if (toolbarItem && toolbarItem?.scriptConfig) {
+        if (toolbarItem?.scriptConfig) {
             await this.handleLinkScript(toolbarItem.linkAttr.type, toolbarItem.scriptConfig, toolbarItem.linkAttr.focus);
         }
     }

@@ -94,6 +94,7 @@ export default class ToolbarItemUi {
                     btn.setIcon(toolbarItem.icon ? toolbarItem.icon : "lucide-plus-square")
                         .setTooltip(t('setting.item.button-icon-tooltip'))
                         .onClick(async () => {
+                            // eslint-disable-next-line @typescript-eslint/no-misused-promises -- IconSuggestModal callback typed as void; async is intentional
                             const modal = new IconSuggestModal(this.ntb, toolbarItem.icon, true, async (icon) => handleIconSelected(icon));
                             modal.open();
                         });
@@ -107,6 +108,7 @@ export default class ToolbarItemUi {
                                     const modifierPressed = (Platform.isWin || Platform.isLinux) ? e?.ctrlKey : e?.metaKey;
                                     if (!modifierPressed) {
                                         e.preventDefault();
+                                        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- IconSuggestModal callback typed as void; async is intentional
                                         const modal = new IconSuggestModal(this.ntb, toolbarItem.icon, true, (icon) => handleIconSelected(icon));
                                         modal.open();
                                     }
@@ -672,6 +674,7 @@ export default class ToolbarItemUi {
                 const commandSetting = new Setting(fieldDiv)
                     .setClass("note-toolbar-setting-item-field-link")
                     .addSearch((cb) => {
+                        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- CommandSuggester callback typed as void; async is intentional
                         new CommandSuggester(this.ntb.app, cb.inputEl, async (command) => {
                             // below code is executed when user selects from list
                             const isValid = await this.ntb.settingsUtils.updateItemComponentStatus(this.parent, command.id, SettingType.Command, cb.inputEl.parentElement);
@@ -1020,16 +1023,17 @@ export default class ToolbarItemUi {
             const config = toolbarItem.scriptConfig;
             const selectedFunction = adapter.getFunctions().get(toolbarItem.scriptConfig.pluginFunction);
             selectedFunction?.parameters.forEach(param => {
-                let initialValue = config[param.parameter as keyof ScriptConfig];
+                let initialValue = config[param.parameter];
                 let setting: Setting | undefined;
                 switch (param.type) {
                     case SettingType.Command:
                         setting = new Setting(fieldDiv)
                             .setClass("note-toolbar-setting-item-field-link")
                             .addSearch((cb) => {
+                                // eslint-disable-next-line @typescript-eslint/no-misused-promises -- CommandSuggester callback typed as void; async is intentional
                                 new CommandSuggester(this.ntb.app, cb.inputEl, async (command) => {
                                     this.ntb.settingsUtils.updateItemComponentStatus(this.parent, command.id, param.type, cb.inputEl.parentElement);
-                                    config[param.parameter as keyof ScriptConfig] = command.id;
+                                    config[param.parameter] = command.id;
                                     cb.inputEl.value = command.name;
                                     await this.ntb.settingsManager.save();
                                 });
@@ -1038,7 +1042,7 @@ export default class ToolbarItemUi {
                                     .onChange(debounce(async (commandName) => {
                                         const commandId = commandName ? this.ntb.utils.getCommandIdByName(commandName) : '';
                                         const isValid = await this.ntb.settingsUtils.updateItemComponentStatus(this.parent, commandId, param.type, cb.inputEl.parentElement);
-                                        config[param.parameter as keyof ScriptConfig] = isValid && commandId ? commandId : '';
+                                        config[param.parameter] = isValid && commandId ? commandId : '';
                                         await this.ntb.settingsManager.save();
                                         this.renderPreview(toolbarItem); // to make sure error state is refreshed
                                     }, 500));
@@ -1060,7 +1064,7 @@ export default class ToolbarItemUi {
                                     .setValue(initialValue ? initialValue : '')
                                     .onChange(debounce(async (value) => {
                                         let isValid = await this.ntb.settingsUtils.updateItemComponentStatus(this.parent, value, param.type, cb.inputEl.parentElement);
-                                        config[param.parameter as keyof ScriptConfig] = isValid ? normalizePath(value) : '';
+                                        config[param.parameter] = isValid ? normalizePath(value) : '';
                                         this.toolbar.updated = new Date().toISOString();
                                         await this.ntb.settingsManager.save();
                                         this.renderPreview(toolbarItem); // to make sure error state is refreshed
@@ -1077,7 +1081,7 @@ export default class ToolbarItemUi {
                                     .onChange(
                                         debounce(async (value: string) => {
                                             let isValid = await this.ntb.settingsUtils.updateItemComponentStatus(this.parent, value, param.type, cb.inputEl.parentElement);
-                                            config[param.parameter as keyof ScriptConfig] = isValid ? value : '';
+                                            config[param.parameter] = isValid ? value : '';
                                             this.toolbar.updated = new Date().toISOString();
                                             await this.ntb.settingsManager.save();
                                             this.renderPreview(toolbarItem); // to make sure error state is refreshed
@@ -1101,7 +1105,7 @@ export default class ToolbarItemUi {
                                     .onChange(
                                         debounce(async (value: string) => {
                                             let isValid = await this.ntb.settingsUtils.updateItemComponentStatus(this.parent, value, param.type, cb.inputEl.parentElement);
-                                            config[param.parameter as keyof ScriptConfig] = isValid ? value : '';
+                                            config[param.parameter] = isValid ? value : '';
                                             this.toolbar.updated = new Date().toISOString();
                                             await this.ntb.settingsManager.save();
                                             this.renderPreview(toolbarItem); // to make sure error state is refreshed

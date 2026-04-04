@@ -65,7 +65,7 @@ export default class ContextMenu {
 					contextMenu.addItem((item: MenuItem) => {
 						item.setTitle(t('toolbar.menu-position'));
 						item.setIcon('move');
-						positionMenu = item.setSubmenu() as Menu;
+						positionMenu = item.setSubmenu();
 					});
 				}
 
@@ -99,7 +99,7 @@ export default class ContextMenu {
 									item.setTitle(t(option.titleKey))
 										.setIcon(option.icon)
 										.onClick(async (menuEvent) => {
-											await this.ntb.settingsManager.updatePosition(toolbarSettings, option.types[0]!);
+											await this.ntb.settingsManager.updatePosition(toolbarSettings, option.types[0]);
 											contextMenu.close();
 										});
 								});
@@ -242,7 +242,7 @@ export default class ContextMenu {
 							.setIcon('square-menu')
 							.setTitle(t('toolbar.menu-edit-menu', { toolbar: menuToolbar.name, interpolation: { escapeValue: false } }))
 							.onClick(async () => {
-								const modal = new ToolbarSettingsModal(this.ntb.app, this.ntb, null, menuToolbar as ToolbarSettings);
+								const modal = new ToolbarSettingsModal(this.ntb.app, this.ntb, null, menuToolbar);
 								modal.setTitle(t('setting.title-edit-toolbar', { toolbar: menuToolbar.name, interpolation: { escapeValue: false } }));
 								modal.open();
 							});
@@ -263,7 +263,7 @@ export default class ContextMenu {
 					.setTitle(t('toolbar.menu-edit-toolbar', { toolbar: toolbarSettings?.name, interpolation: { escapeValue: false } }))
 					.setIcon('rectangle-ellipsis')
 					.onClick((menuEvent) => {
-						const modal = new ToolbarSettingsModal(this.ntb.app, this.ntb, null, toolbarSettings as ToolbarSettings);
+						const modal = new ToolbarSettingsModal(this.ntb.app, this.ntb, null, toolbarSettings);
 						modal.setTitle(t('setting.title-edit-toolbar', { toolbar: toolbarSettings?.name, interpolation: { escapeValue: false } }));
 						modal.open();
 					});

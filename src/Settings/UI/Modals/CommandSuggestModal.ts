@@ -39,6 +39,7 @@ export default class CommandSuggestModal extends SuggestModal<Command> {
         el.setText(command.name);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- Overrides Obsidian SuggestModal.onChooseSuggestion typed as void; async is intentional
     async onChooseSuggestion(command: Command, event: MouseEvent | KeyboardEvent) {
         this.callback(command);
         this.close();

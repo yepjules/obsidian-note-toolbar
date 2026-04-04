@@ -186,6 +186,7 @@ export default class ItemListUi {
             handle: '.sortable-handle',
             onChange: (item) => navigator.vibrate(50),
             onChoose: (item) => navigator.vibrate(50),
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises -- SortableJS onSort callback typed as void; async needed to save settings
             onSort: async (item) => {
                 this.ntb.debug("sortable: index: ", item.oldIndex, " -> ", item.newIndex);
                 if (item.oldIndex !== undefined && item.newIndex !== undefined) {

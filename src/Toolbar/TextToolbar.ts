@@ -99,14 +99,14 @@ export class TextToolbarClass implements PluginValue {
 
         // if the selection hasn't changed, do nothing
         if (
-            this.lastSelection &&
-            this.lastSelection.from === this.selection.from &&
+            this.lastSelection?.from === this.selection.from &&
             this.lastSelection.to === this.selection.to &&
             this.lastSelection.text === this.selection.text
         ) {
             return;
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- requestAnimationFrame callback typed as void; async needed for async toolbar rendering
         requestAnimationFrame(async () => {
 
             if (!this.selection) return;

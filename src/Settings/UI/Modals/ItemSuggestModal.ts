@@ -380,6 +380,7 @@ export default class ItemSuggestModal extends SuggestModal<ToolbarItemSettings> 
                 if (this.toolbarId && this.inputEl.value === '') {
                     this.close();
                     let activeFile = this.ntb.app.workspace.getActiveFile();
+                    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- ToolbarSuggestModal callback typed as void; async is intentional
                     const modal = new ToolbarSuggestModal(this.ntb, false, false, false, async (toolbar: ToolbarSettings) => {
                         await this.ntb.commands.openQuickTools(toolbar.uuid);
                     });
@@ -399,6 +400,7 @@ export default class ItemSuggestModal extends SuggestModal<ToolbarItemSettings> 
      * Closes the modal and executes the given item.
      * @param selectedItem Item to use.
      */
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises -- Overrides Obsidian SuggestModal.onChooseSuggestion typed as void; async is intentional
     async onChooseSuggestion(selectedItem: ToolbarItemSettings, event: MouseEvent | KeyboardEvent) {
         this.ntb.debug("onChooseSuggestion: ", selectedItem, this.activeFile, event);
         if (this.mode === 'QuickTools') {

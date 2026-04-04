@@ -66,16 +66,19 @@ export default defineConfig([
 			// "@typescript-eslint/no-floating-promises": "error",
 			// Prevents creating functions inside loops (new function instance each iteration)
 			"@typescript-eslint/no-loop-func": "error",
- 
+
+			"@typescript-eslint/no-misused-promises": "error",
+			"@typescript-eslint/no-floating-promises": "warn",
+
 			// PERFORMANCE
 			// Prevents unnecessary async/await overhead
-			// "@typescript-eslint/require-await": "warn",
+			"@typescript-eslint/require-await": "warn",
 			// Avoids expensive string concatenation in loops
 			// "@typescript-eslint/prefer-string-starts-ends-with": "error",
 			// Use optional chaining (more optimized by engines)
-			// "@typescript-eslint/prefer-optional-chain": "warn",
+			"@typescript-eslint/prefer-optional-chain": "warn",
 			// Prevents unnecessary type assertions that can hide performance issues
-			// "@typescript-eslint/no-unnecessary-type-assertion": "error",
+			"@typescript-eslint/no-unnecessary-type-assertion": "error",
 			// Catches redundant conditionals that waste cycles
 			// "@typescript-eslint/no-unnecessary-condition": "warn"
 

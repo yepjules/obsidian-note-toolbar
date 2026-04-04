@@ -437,8 +437,9 @@ export default class SettingsUIUtils {
 		toolbarInsertIndex?: number
 	) {
 		const modal = new ItemSuggestModal(
-			this.ntb, 
-			undefined, 
+			this.ntb,
+			undefined,
+			// eslint-disable-next-line @typescript-eslint/no-misused-promises -- ItemSuggestModal callback typed as void; async is intentional
 			async (selectedItem: ToolbarItemSettings) => {
 				
 				const isBrowseGalleryItem = selectedItem.uuid === 'OPEN_GALLERY';
@@ -519,6 +520,7 @@ export default class SettingsUIUtils {
 	 * @param item item to copy
 	 */
 	async copyToolbarItem(fromToolbar: ToolbarSettings, item: ToolbarItemSettings): Promise<void> {
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises -- ToolbarSuggestModal callback typed as void; async is intentional
 		const modal = new ToolbarSuggestModal(this.ntb, false, false, false, async (toToolbar: ToolbarSettings) => {
 			if (toToolbar) {
 				await this.ntb.settingsManager.duplicateToolbarItem(toToolbar, item);
@@ -536,6 +538,7 @@ export default class SettingsUIUtils {
 	 * @param callback function to execute after move is complete, to update the UI as needed
 	 */
 	async moveToolbarItem(fromToolbar: ToolbarSettings, item: ToolbarItemSettings, callback: () => void | Promise<void>): Promise<void> {
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises -- ToolbarSuggestModal callback typed as void; async is intentional
 		const modal = new ToolbarSuggestModal(this.ntb, false, false, false, async (toToolbar: ToolbarSettings) => {
 			if (toToolbar) {
 				fromToolbar.items.remove(item);
@@ -742,7 +745,7 @@ export default class SettingsUIUtils {
 		const toolbarPreviewFr = toolbar && this.ntb.settingsUtils.createToolbarPreviewFr(toolbar, undefined, false);
 		removeFieldHelp(setting.controlEl);
 		setFieldHelp(setting.controlEl, toolbarPreviewFr);
-		const tbarEl = setting.controlEl.querySelector('.note-toolbar-setting-tbar-preview') as HTMLElement | null;
+		const tbarEl = setting.controlEl.querySelector('.note-toolbar-setting-tbar-preview');
 		// only apply fade if the preview is overflowing
 		if (tbarEl) setTimeout(() => {
 			tbarEl.classList.toggle('note-toolbar-setting-tbar-preview-fade', tbarEl.scrollWidth > tbarEl.clientWidth);
@@ -876,7 +879,7 @@ export default class SettingsUIUtils {
 		else {
 			switch (fieldType) {
 				case SettingType.Script:
-					if (toolbarItem && toolbarItem.scriptConfig) {
+					if (toolbarItem?.scriptConfig) {
 						// validate what the selected function for the adapter for this item requires
 						let adapter = this.ntb.adapters.getAdapterForItemType(toolbarItem.linkAttr.type);
 						if (adapter) {
@@ -885,7 +888,7 @@ export default class SettingsUIUtils {
 							if (params) {
 								for (const [index, param] of params.entries()) {
 									// TODO? error if required parameter is empty?
-									const value = toolbarItem.scriptConfig?.[param.parameter as keyof ScriptConfig] ?? null;
+									const value = toolbarItem.scriptConfig?.[param.parameter] ?? null;
 									if (value) {
 										const subfieldValid = await this.updateItemComponentStatus(parent, value, param.type, componentEl);
 										status = subfieldValid ? Status.Valid : Status.Invalid;

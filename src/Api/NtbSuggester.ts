@@ -207,7 +207,7 @@ export default class NtbSuggester<T> extends FuzzySuggestModal<T> {
         if (this.rendermd) MarkdownRenderer.render(this.ntb.app, this.getItemText(item.item), el, '', component);
         else el.setText(this.getItemText(item.item)); 
         // if the item is a custom input (not already in the list of suggestions), add a special class for styling #518
-        const suggestionKey = this.keys && this.keys.indexOf(item.item);
+        const suggestionKey = this.keys?.indexOf(item.item);
         const isCustomInput = suggestionKey === -1 && this.getItemText(item.item) === this.inputEl.value;
         if (isCustomInput) el.toggleClass('ntb-is-custom-input', true);
     }
@@ -288,9 +288,9 @@ export default class NtbSuggester<T> extends FuzzySuggestModal<T> {
 
         // handle async prefix functions: fire it, inject the result into the input when resolved, and block re-firing while pending
         if (this.prefixHandlerActive) return this.saveMatches([]);
-        const prefixFn = typeof this.prefixes![prefix] === 'function'
-            ? this.prefixes![prefix] as () => unknown[] | Promise<unknown>
-            : () => this.prefixes![prefix] as unknown[];
+        const prefixFn = typeof this.prefixes[prefix] === 'function'
+            ? this.prefixes[prefix] as () => unknown[] | Promise<unknown>
+            : () => this.prefixes[prefix] as unknown[];
         const prefixFnResult = prefixFn();
         if (prefixFnResult instanceof Promise) {
             if (this.prefixHandlerActive) return this.saveMatches([]);
@@ -315,9 +315,9 @@ export default class NtbSuggester<T> extends FuzzySuggestModal<T> {
         // handle non-async prefix code
         this.activePrefix = prefix;
         this.activePrefixStart = lastSpaceIndex === -1 ? 0 : lastSpaceIndex + 1;
-        this.keys = (typeof this.prefixes![prefix] === 'function'
-            ? (this.prefixes![prefix] as () => T[])()
-            : this.prefixes![prefix] as T[]);
+        this.keys = (typeof this.prefixes[prefix] === 'function'
+            ? (this.prefixes[prefix] as () => T[])()
+            : this.prefixes[prefix] as T[]);
 
         // if there's only one suggestion, just return it
         if (this.keys.length === 1) {

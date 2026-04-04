@@ -151,6 +151,7 @@ export default class TipView extends ItemView {
      */
     renderGalleryCallouts(contentEl: HTMLDivElement, color: ColorType) {
         const callouts = contentEl.querySelectorAll('.callout[data-callout="note-toolbar-gallery"]');
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- forEach callback typed as void; async needed for async rendering logic
         callouts.forEach(async (calloutEl: HTMLDivElement) => {
             const items: string[] = [];
             calloutEl.querySelectorAll('li').forEach(li => {
@@ -199,6 +200,7 @@ export default class TipView extends ItemView {
      */
     renderTipVideos(contentEl: HTMLDivElement) {
         const callouts = contentEl.querySelectorAll('.callout[data-callout="note-toolbar-video"]');
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- forEach callback typed as void; async needed for async rendering logic
         callouts.forEach(async (calloutEl: HTMLDivElement) => {
             const url = calloutEl.querySelector('.callout-content')?.textContent?.trim();
             if (!url) return;

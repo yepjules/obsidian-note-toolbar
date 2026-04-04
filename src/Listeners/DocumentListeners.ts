@@ -38,6 +38,7 @@ export default class DocumentListeners {
         // possible issue? not always true?
         this.isMouseSelecting = true;
         // timeout is because selectionchange event is asynchronous and might not fire before mouseup
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises -- setTimeout callback; renderPreviewTextToolbar is async but fire-and-forget is intentional here
         setTimeout(() => this.renderPreviewTextToolbar(), 10);
     }
 
@@ -87,6 +88,7 @@ export default class DocumentListeners {
         this.isMouseDown = false;
         if (this.ntb.settings.textToolbar && this.previewSelection) {
             // timeout is because selectionchange event is asynchronous and might not fire before mouseup
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises -- setTimeout callback; renderPreviewTextToolbar is async but fire-and-forget is intentional here
             if (this.isMouseSelecting) setTimeout(() => this.renderPreviewTextToolbar(), 10);
         }
         this.isMouseSelecting = false;
