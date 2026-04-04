@@ -312,7 +312,7 @@ export default class NoteToolbarApi<T> implements INoteToolbarApi<T> {
      * 
      * @see INoteToolbarApi.setProperty
      */
-    async setProperty(property: string, value: any) {
+    async setProperty(property: string, value: unknown) {
         const activeFile = this.ntb.app.workspace.getActiveFile();
         if (activeFile) {
             await this.ntb.app.fileManager.processFrontMatter(activeFile, (frontmatter) => {

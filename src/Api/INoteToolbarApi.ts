@@ -237,7 +237,7 @@ export default interface INoteToolbarApi<T> {
      * await ntb.setProperty('A Number', 1234);
      * await ntb.setProperty('A List', ['asdf', 'asdf2']);
      */
-    setProperty: (property: string, value: any) => Promise<void>;
+    setProperty: (property: string, value: unknown) => Promise<void>;
 
     /**
      * Replaces the selected text, or the word at the cursor position, with the provided string.

@@ -1,5 +1,5 @@
 import NoteToolbarPlugin from "main";
-import { Editor, ItemView, MarkdownFileInfo, MarkdownView, MarkdownViewModeType, Menu, Platform, TFile } from "obsidian";
+import { Editor, ItemView, MarkdownFileInfo, MarkdownView, MarkdownViewModeType, Menu, Platform, TFile, WorkspaceLeaf } from "obsidian";
 import { LocalVar } from "Settings/NoteToolbarSettings";
 import { getViewId } from "Utils/Utils";
 import EditorMenu from "../Toolbar/EditorMenu";
@@ -161,7 +161,7 @@ export default class WorkspaceListeners {
 	/**
 	 * On leaf changes, delete, check and render toolbar if necessary. 
 	 */
-	onLeafChange = async (leaf: any) => {
+	onLeafChange = async (leaf: WorkspaceLeaf | null) => {
 		let renderToolbar = false;
 		// FIXME? what if there's more than one toolbar?
 		let toolbarEl = await this.ntb.el.getToolbarElAsync();

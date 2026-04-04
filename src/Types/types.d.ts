@@ -4,7 +4,7 @@ import INoteToolbarApi from "Api/INoteToolbarApi";
 declare global {
     
     interface Window {
-        ntb?: INoteToolbarApi<any>;
+        ntb?: INoteToolbarApi<any>; // eslint-disable-line @typescript-eslint/no-explicit-any -- generic type parameter erasure: T is specialized per call site
     }
 
     // provides access to Obsidian's translation framework

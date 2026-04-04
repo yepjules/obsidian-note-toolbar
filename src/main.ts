@@ -35,7 +35,7 @@ import PluginUtils from 'Utils/Utils';
 export default class NoteToolbarPlugin extends Plugin {
 
 	adapters: AdapterManager;
-	api: INoteToolbarApi<any>;
+	api: INoteToolbarApi<any>; // eslint-disable-line @typescript-eslint/no-explicit-any -- generic type parameter erasure: T is specialized per call site
 	commands: CommandManager;
 	hotkeys: HotkeyHelper;
 	gallery: GalleryManager;

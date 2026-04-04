@@ -527,7 +527,7 @@ export function hasStyle(toolbar: ToolbarSettings, defaultStyle: DefaultStyleTyp
  * @param args JSON-formatted string
  * @returns parsed arguments, or null if parsing fails
  */
-export function importArgs(args: string): Record<string, any> | null {
+export function importArgs(args: string): Record<string, unknown> | null {
 	try {
 		// remove spaces between keys and colons
 		args = args.replace(/(\w+)\s*:/g, '"$1":');
@@ -548,7 +548,7 @@ export function importArgs(args: string): Record<string, any> | null {
  * @param app App
  * @param textToInsert thing to insert
  */
-export function insertTextAtCursor(app: App, textToInsert: any) {
+export function insertTextAtCursor(app: App, textToInsert: unknown) {
 	const activeLeaf = app.workspace.getActiveViewOfType(MarkdownView);
 	const editor = activeLeaf ? activeLeaf.editor : null;
 	if (editor) {
